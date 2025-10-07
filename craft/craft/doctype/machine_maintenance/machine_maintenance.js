@@ -61,7 +61,14 @@ frappe.ui.form.on('Machine Maintenance', {
 				frappe.show_alert(__('Status set to Overdue'));
 			}
 		}
-	}
+	},
+
+	onload: function(frm) {
+        frappe.db.get_single_value('Global Defaults', 'default_company')
+            .then(company => {
+                frm.set_value('company', company);
+            });
+    }
 
 });
 

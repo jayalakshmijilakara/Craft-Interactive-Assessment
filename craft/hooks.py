@@ -83,7 +83,7 @@ app_license = "mit"
 # ------------
 
 # before_install = "craft.install.before_install"
-# after_install = "craft.install.after_install"
+after_install = "craft.install.after_install"
 
 # Uninstallation
 # ------------
@@ -144,6 +144,17 @@ app_license = "mit"
 # 		"on_trash": "method"
 # 	}
 # }
+
+
+
+
+# doc_events = {
+#     "Machine Maintenance": {
+#         "before_submit": "craft.craft.doctype.machine_maintenance.machine_maintenance.before_submit",
+#         "on_submit": "craft.craft.doctype.machine_maintenance.machine_maintenance.on_submit"
+#     }
+# }
+
 
 # Scheduled Tasks
 # ---------------

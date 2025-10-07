@@ -7,6 +7,8 @@
  "field_order": [
   "machine_name",
   "technician",
+  "journal_entry",
+  "company",
   "column_break_hnve",
   "status",
   "maintenance_date",
@@ -15,8 +17,8 @@
   "cost",
   "section_break_fuaz",
   "machine_maintenance_part",
-  "notes_tab",
   "amended_from",
+  "notes_tab",
   "notes"
  ],
  "fields": [
@@ -101,12 +103,27 @@
    "fieldname": "notes",
    "fieldtype": "Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "journal_entry",
+   "fieldtype": "Link",
+   "label": "Journal Entry",
+   "options": "Journal Entry",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-07 10:46:27.254145",
+ "modified": "2025-10-07 17:48:37.357143",
  "modified_by": "Administrator",
  "module": "Craft",
  "name": "Machine Maintenance",
