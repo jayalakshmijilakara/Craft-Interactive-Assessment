@@ -253,3 +253,8 @@ after_install = "craft.install.after_install"
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+fixtures = [
+    {"dt": "Workflow", "filters": [["name", "in", ["Machine Maintenance Workflow"]]]},
+    {"dt": "Workflow State"},
+    {"dt": "Workflow Action Master"}
+]

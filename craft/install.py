@@ -22,7 +22,7 @@ def after_install():
     if not cash_parent:
         frappe.throw(f"No Asset parent account found for company {company_name}")
 
-    # --- Maintenance Expense Account ---
+    
     maint_acc_name = f"Maintenance Expense Account - {abbr}"
     if not frappe.db.exists("Account", {"name": maint_acc_name, "company": company_name}):
         maintenance_account = frappe.get_doc({
@@ -38,7 +38,7 @@ def after_install():
     else:
         maintenance_account = frappe.get_doc("Account", maint_acc_name)
 
-    # --- Cash/Bank Account ---
+    
     cash_acc_name = f"Cash/Bank Account - {abbr}"
     if not frappe.db.exists("Account", {"name": cash_acc_name, "company": company_name}):
         cash_account = frappe.get_doc({
@@ -54,12 +54,35 @@ def after_install():
     else:
         cash_account = frappe.get_doc("Account", cash_acc_name)
 
+    
     company.custom_default_maintenance_expense_account = maintenance_account.name
     company.default_cash_account = cash_account.name
     company.save(ignore_permissions=True)
 
+    
+    roles_to_create = ["Technician", "Manager"]
+    for role_name in roles_to_create:
+        if not frappe.db.exists("Role", role_name):
+            role_doc = frappe.get_doc({
+                "doctype": "Role",
+                "role_name": role_name
+            })
+            role_doc.insert(ignore_permissions=True)
+            frappe.logger().info(f"Role '{role_name}' created successfully")
+
+    # Assign roles to Administrator and Guest
+    users = ["Administrator", "Guest"]
+    for user in users:
+        user_doc = frappe.get_doc("User", user)
+        for role_name in roles_to_create:
+            if not frappe.db.exists("Has Role", {"parent": user, "role": role_name}):
+                user_doc.append("roles", {"role": role_name})
+        user_doc.save(ignore_permissions=True)
+        frappe.logger().info(f"Roles {roles_to_create} assigned to {user}")
+
     frappe.db.commit()
     frappe.logger().info(f"Accounts created and linked for {company_name}")
+
 
 def get_default_company():
     """Return the default company name"""
