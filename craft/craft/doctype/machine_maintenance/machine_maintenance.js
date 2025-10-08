@@ -58,6 +58,7 @@ frappe.ui.form.on('Machine Maintenance', {
 
 			if (frappe.datetime.get_diff(today, mdate) > 0 && frm.doc.status !== 'Overdue') {
 				frm.set_value('status', 'Overdue');
+				frm.save();
 				frappe.show_alert(__('Status set to Overdue'));
 			}
 		}

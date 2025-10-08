@@ -7,7 +7,9 @@ def execute(filters=None):
     filters = filters or {}
     columns = get_columns(filters)
     data = get_data(filters)
-    return columns, data, None, None, get_report_summary(filters)
+    
+    chart = get_report_chart(filters)  
+    return columns, data, None, chart
 
 
 def get_columns(filters):
@@ -74,55 +76,67 @@ def get_data(filters):
 
     return frappe.db.sql(query, params, as_dict=True)
 
+def get_report_chart(filters):
+    conditions = []
+    params = {}
 
-def get_report_summary(filters):
-    if filters.get('consolidated'):
-        return
-    else:
+    if filters.get('machine_name'):
+        conditions.append("machine_name = %(machine_name)s")
+        params['machine_name'] = filters.get('machine_name')
+    if filters.get('technician'):
+        conditions.append("technician = %(technician)s")
+        params['technician'] = filters.get('technician')
+    if filters.get('from_date'):
+        conditions.append("maintenance_date >= %(from_date)s")
+        params['from_date'] = filters.get('from_date')
+    if filters.get('to_date'):
+        conditions.append("maintenance_date <= %(to_date)s")
+        params['to_date'] = filters.get('to_date')
 
-        conditions = []
-        params = {}
+    where_clause = " AND ".join(conditions) if conditions else "1=1"
 
-        if filters.get('machine_name'):
-            conditions.append("machine_name = %(machine_name)s")
-            params['machine_name'] = filters.get('machine_name')
-        if filters.get('technician'):
-            conditions.append("technician = %(technician)s")
-            params['technician'] = filters.get('technician')
-        if filters.get('from_date'):
-            conditions.append("maintenance_date >= %(from_date)s")
-            params['from_date'] = filters.get('from_date')
-        if filters.get('to_date'):
-            conditions.append("maintenance_date <= %(to_date)s")
-            params['to_date'] = filters.get('to_date')
+    chart_type = (filters.get("chart_type") or "Pie").lower()
 
-        where_clause = " AND ".join(conditions) if conditions else "1=1"
-
-        summary_query = f"""
-            SELECT 
-                status, COUNT(name) AS count
+    if chart_type == "pie":
+      
+        query = f"""
+            SELECT status, COUNT(name) AS count
             FROM `tabMachine Maintenance`
             WHERE {where_clause}
             GROUP BY status
         """
+        data = frappe.db.sql(query, params, as_dict=True)
 
-        result = frappe.db.sql(summary_query, params, as_dict=True)
-        status_counts = {r['status']: r['count'] for r in result}
+        return {
+            "data": {
+                "labels": [d['status'] for d in data],
+                "datasets": [{"values": [d['count'] for d in data]}]
+            },
+            "type": "pie",
+            "title": "Maintenance Status Distribution"
+        }
 
-        return [
-            {
-                "label": "Scheduled",
-                "value": status_counts.get("Scheduled", 0),
-                "indicator": "orange"
+    else:
+       
+        query = f"""
+            SELECT 
+                DATE_FORMAT(maintenance_date, '%%Y-%%m-%%d') AS day,
+                SUM(cost) AS total_cost
+            FROM `tabMachine Maintenance`
+            WHERE {where_clause}
+            GROUP BY day
+            ORDER BY day
+        """
+        data = frappe.db.sql(query, params, as_dict=True)
+
+        return {
+            "data": {
+                "labels": [d['day'] for d in data],
+                "datasets": [{
+                    "name": "Daily Maintenance Cost",
+                    "values": [d['total_cost'] for d in data]
+                }]
             },
-            {
-                "label": "Completed",
-                "value": status_counts.get("Completed", 0),
-                "indicator": "green"
-            },
-            {
-                "label": "Overdue",
-                "value": status_counts.get("Overdue", 0),
-                "indicator": "red"
-            }
-        ]
+            "type": "bar",
+            "title": "Daily Maintenance Cost"
+        }

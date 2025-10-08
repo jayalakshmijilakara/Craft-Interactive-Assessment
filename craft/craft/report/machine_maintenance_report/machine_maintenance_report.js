@@ -1,6 +1,3 @@
-// Copyright (c) 2025, Craft
-// For license information, please see license.txt
-
 frappe.query_reports["Machine Maintenance Report"] = {
     "filters": [
         {
@@ -34,26 +31,25 @@ frappe.query_reports["Machine Maintenance Report"] = {
             "label": "Consolidated",
             "fieldtype": "Check",
             "default": 0
+        },
+        {
+            "fieldname": "chart_type",
+            "label": "Chart Type",
+            "fieldtype": "Select",
+            "options": ["Pie", "Bar"],
+            "default": "Pie"
         }
     ],
 
-    // Color-code only the status column
     "formatter": function (value, row, column, data, default_formatter) {
         value = default_formatter(value, row, column, data);
-
         if (column.fieldname === "status" && data && data.status) {
             let color = "";
-            if (data.status === "Overdue") {
-                color = "color:#ff4d4d; ";
-            } else if (data.status === "Scheduled") {
-                color = "color:#ffe066; ";
-            } else if (data.status === "Completed") {
-                color = "color:#33cc33; ";
-            }
-
+            if (data.status === "Overdue") color = "color:#ff4d4d;";
+            else if (data.status === "Scheduled") color = "color:#ffe066;";
+            else if (data.status === "Completed") color = "color:#33cc33;";
             return `<div style="${color}; padding:4px; border-radius:4px;">${value}</div>`;
         }
-
         return value;
     }
 };
