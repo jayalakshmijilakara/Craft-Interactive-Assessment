@@ -47,7 +47,7 @@ frappe.ui.form.on('Machine Maintenance', {
 				frappe.confirm(__('Mark this maintenance as completed?'), function () {
 					frm.set_value('status', 'Completed');
 					frm.set_value('completion_date', frappe.datetime.get_today());
-                    frm.save('Submit');
+                    frm.save();
 				});
 			});
 		}
