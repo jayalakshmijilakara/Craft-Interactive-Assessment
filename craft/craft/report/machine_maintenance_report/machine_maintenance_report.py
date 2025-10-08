@@ -7,7 +7,7 @@ def execute(filters=None):
     filters = filters or {}
     columns = get_columns(filters)
     data = get_data(filters)
-    return columns, data
+    return columns, data, None, None, get_report_summary(filters)
 
 
 def get_columns(filters):
@@ -32,7 +32,6 @@ def get_data(filters):
     conditions = []
     params = {}
 
-   
     if filters.get('machine_name'):
         conditions.append("machine_name = %(machine_name)s")
         params['machine_name'] = filters.get('machine_name')
@@ -53,10 +52,7 @@ def get_data(filters):
             SELECT 
                 machine_name,
                 MIN(maintenance_date) AS maintenance_date,
-                NULL AS technician,
-                'Multiple' AS status,
-                SUM(cost) AS cost,
-                NULL AS name
+                SUM(cost) AS cost
             FROM `tabMachine Maintenance`
             WHERE {where_clause}
             GROUP BY machine_name
@@ -65,15 +61,68 @@ def get_data(filters):
     else:
         query = f"""
             SELECT 
+                name,
                 machine_name,
                 maintenance_date,
                 technician,
                 status,
-                cost,
-                name
+                cost
             FROM `tabMachine Maintenance`
             WHERE {where_clause}
             ORDER BY maintenance_date DESC
         """
 
     return frappe.db.sql(query, params, as_dict=True)
+
+
+def get_report_summary(filters):
+    if filters.get('consolidated'):
+        return
+    else:
+
+        conditions = []
+        params = {}
+
+        if filters.get('machine_name'):
+            conditions.append("machine_name = %(machine_name)s")
+            params['machine_name'] = filters.get('machine_name')
+        if filters.get('technician'):
+            conditions.append("technician = %(technician)s")
+            params['technician'] = filters.get('technician')
+        if filters.get('from_date'):
+            conditions.append("maintenance_date >= %(from_date)s")
+            params['from_date'] = filters.get('from_date')
+        if filters.get('to_date'):
+            conditions.append("maintenance_date <= %(to_date)s")
+            params['to_date'] = filters.get('to_date')
+
+        where_clause = " AND ".join(conditions) if conditions else "1=1"
+
+        summary_query = f"""
+            SELECT 
+                status, COUNT(name) AS count
+            FROM `tabMachine Maintenance`
+            WHERE {where_clause}
+            GROUP BY status
+        """
+
+        result = frappe.db.sql(summary_query, params, as_dict=True)
+        status_counts = {r['status']: r['count'] for r in result}
+
+        return [
+            {
+                "label": "Scheduled",
+                "value": status_counts.get("Scheduled", 0),
+                "indicator": "orange"
+            },
+            {
+                "label": "Completed",
+                "value": status_counts.get("Completed", 0),
+                "indicator": "green"
+            },
+            {
+                "label": "Overdue",
+                "value": status_counts.get("Overdue", 0),
+                "indicator": "red"
+            }
+        ]
