@@ -1,12 +1,10 @@
 import frappe
 
 def after_install():
-    # get company details
     company_name = get_default_company()
     company = frappe.get_doc("Company", company_name)
-    abbr = company.abbr  # e.g., "C"
+    abbr = company.abbr 
 
-    # --- find parent groups ---
     expense_parent = frappe.db.get_value(
         "Account",
         {"company": company_name, "root_type": "Expense", "is_group": 1},
@@ -56,13 +54,12 @@ def after_install():
     else:
         cash_account = frappe.get_doc("Account", cash_acc_name)
 
-    # --- Update company defaults ---
     company.custom_default_maintenance_expense_account = maintenance_account.name
     company.default_cash_account = cash_account.name
     company.save(ignore_permissions=True)
 
     frappe.db.commit()
-    frappe.logger().info(f"✅ Accounts created and linked for {company_name}")
+    frappe.logger().info(f"Accounts created and linked for {company_name}")
 
 def get_default_company():
     """Return the default company name"""

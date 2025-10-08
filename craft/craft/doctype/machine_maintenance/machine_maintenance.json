@@ -1,148 +1,159 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2025-10-07 10:28:23.965523",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "machine_name",
-  "technician",
-  "journal_entry",
-  "company",
-  "column_break_hnve",
-  "status",
-  "maintenance_date",
-  "maintenance_type",
-  "completion_date",
-  "cost",
-  "section_break_fuaz",
-  "machine_maintenance_part",
-  "amended_from",
-  "notes_tab",
-  "notes"
- ],
- "fields": [
-  {
-   "fieldname": "machine_name",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Machine Name",
-   "options": "Item",
-   "reqd": 1
-  },
-  {
-   "default": "now",
-   "fieldname": "maintenance_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Maintenance Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "maintenance_type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Maintenance Type",
-   "options": "\nPreventive\nCorrective",
-   "reqd": 1
-  },
-  {
-   "fieldname": "completion_date",
-   "fieldtype": "Date",
-   "label": "Completion Date"
-  },
-  {
-   "fieldname": "technician",
-   "fieldtype": "Link",
-   "label": "Technician",
-   "options": "Employee"
-  },
-  {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Draft\nScheduled\nCompleted\nOverdue"
-  },
-  {
-   "fieldname": "cost",
-   "fieldtype": "Currency",
-   "label": "Cost",
-   "reqd": 1
-  },
-  {
-   "fieldname": "notes_tab",
-   "fieldtype": "Tab Break",
-   "label": "Notes"
-  },
-  {
-   "fieldname": "machine_maintenance_part",
-   "fieldtype": "Table",
-   "label": "Machine Maintenance Part",
-   "options": "Parts Used"
-  },
-  {
-   "fieldname": "column_break_hnve",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_fuaz",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Machine Maintenance",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "notes",
-   "fieldtype": "Text",
-   "label": "Notes"
-  },
-  {
-   "fieldname": "company",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Company",
-   "options": "Company",
-   "read_only": 1
-  },
-  {
-   "fieldname": "journal_entry",
-   "fieldtype": "Link",
-   "label": "Journal Entry",
-   "options": "Journal Entry",
-   "read_only": 1
-  }
- ],
- "index_web_pages_for_search": 1,
- "is_submittable": 1,
- "links": [],
- "modified": "2025-10-07 17:48:37.357143",
- "modified_by": "Administrator",
- "module": "Craft",
- "name": "Machine Maintenance",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "naming_series:.####",
+  "creation": "2025-10-07 10:28:23.965523",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "naming_series",
+    "machine_name",
+    "technician",
+    "journal_entry",
+    "company",
+    "column_break_hnve",
+    "status",
+    "maintenance_date",
+    "maintenance_type",
+    "completion_date",
+    "cost",
+    "section_break_fuaz",
+    "machine_maintenance_part",
+    "amended_from",
+    "notes_tab",
+    "notes"
+  ],
+  "fields": [
+    {
+      "fieldname": "naming_series",
+      "fieldtype": "Select",
+      "label": "Naming Series",
+      "options": "MM-",
+      "default": "MM-",
+      "reqd": 1
+    },
+    {
+      "fieldname": "machine_name",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Machine Name",
+      "options": "Item",
+      "reqd": 1
+    },
+    {
+      "default": "now",
+      "fieldname": "maintenance_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Maintenance Date",
+      "reqd": 1
+    },
+    {
+      "fieldname": "maintenance_type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Maintenance Type",
+      "options": "\nPreventive\nCorrective",
+      "reqd": 1
+    },
+    {
+      "fieldname": "completion_date",
+      "fieldtype": "Date",
+      "label": "Completion Date"
+    },
+    {
+      "fieldname": "technician",
+      "fieldtype": "Link",
+      "label": "Technician",
+      "options": "Employee"
+    },
+    {
+      "default": "Draft",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Draft\nScheduled\nCompleted\nOverdue"
+    },
+    {
+      "fieldname": "cost",
+      "fieldtype": "Currency",
+      "label": "Cost",
+      "reqd": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "notes_tab",
+      "fieldtype": "Tab Break",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "machine_maintenance_part",
+      "fieldtype": "Table",
+      "label": "Machine Maintenance Part",
+      "options": "Parts Used"
+    },
+    {
+      "fieldname": "column_break_hnve",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "section_break_fuaz",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "amended_from",
+      "fieldtype": "Link",
+      "label": "Amended From",
+      "no_copy": 1,
+      "options": "Machine Maintenance",
+      "print_hide": 1,
+      "read_only": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "notes",
+      "fieldtype": "Text",
+      "label": "Notes"
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "hidden": 1,
+      "label": "Company",
+      "options": "Company",
+      "read_only": 1
+    },
+    {
+      "fieldname": "journal_entry",
+      "fieldtype": "Link",
+      "label": "Journal Entry",
+      "options": "Journal Entry",
+      "read_only": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "is_submittable": 1,
+  "links": [],
+  "modified": "2025-10-07 17:48:37.357143",
+  "modified_by": "Administrator",
+  "module": "Craft",
+  "name": "Machine Maintenance",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }
