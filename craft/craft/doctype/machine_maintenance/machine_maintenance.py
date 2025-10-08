@@ -39,7 +39,7 @@ def create_maintenance_journal_entry(doc):
 
     amount_company_currency = flt(cost) * flt(rate)
 
-    # extra guard
+   
     if amount_company_currency <= 0:
         frappe.throw(_("Invalid converted amount. Please check maintenance cost or exchange rate."))
 
@@ -49,7 +49,7 @@ def create_maintenance_journal_entry(doc):
     if not maintenance_expense_account or not cash_account:
         frappe.throw(_("Please configure both Maintenance Expense and Cash/Bank accounts in Company."))
 
-    # Final safety check before append
+    
     if not (flt(amount_company_currency) > 0):
         frappe.throw(_("Journal Entry amount cannot be zero."))
 
