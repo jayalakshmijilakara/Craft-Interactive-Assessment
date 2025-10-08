@@ -256,5 +256,10 @@ after_install = "craft.install.after_install"
 fixtures = [
     {"dt": "Workflow", "filters": [["name", "in", ["Machine Maintenance Workflow"]]]},
     {"dt": "Workflow State"},
-    {"dt": "Workflow Action Master"}
+    {"dt": "Workflow Action Master"},
+    {"dt": "Notification", "filters": [["name", "in", [
+        "Machine Maintenance Scheduled",
+        "Machine Maintenance Complete",
+        "Machine Maintenance Overdue"
+    ]]]}
 ]
