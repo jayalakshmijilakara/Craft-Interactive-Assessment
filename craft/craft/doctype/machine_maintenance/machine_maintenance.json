@@ -65,7 +65,8 @@
    "fieldname": "technician",
    "fieldtype": "Link",
    "label": "Technician",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "default": "Draft",
